@@ -8,12 +8,13 @@ using namespace std;
 
 int main()
 {
-	int pixelWidth =  500; // VideoMode::getDesktopMode().width / 2;
-	int pixelHeight = 500; // VideoMode::getDesktopMode().height / 2;
+	int pixelWidth =  VideoMode::getDesktopMode().width;
+	int pixelHeight = VideoMode::getDesktopMode().height;
 	VideoMode vm(pixelWidth, pixelHeight);
 	RenderWindow window(vm, "Mandelbrot Set", Style::Default);
 
 	ComplexPlane c(pixelWidth, pixelHeight);
+	Vector2i center(0, 0);
 
 	Font font;
         if (!font.loadFromFile("fonts/Ubuntu-Regular.ttf"))
@@ -39,23 +40,25 @@ int main()
 			}
 
 			if (event.type == Event::MouseButtonPressed)
-                        {       
-                                if (Mouse::isButtonPressed(Mouse::Button::Right))
+            {       
+                if (Mouse::isButtonPressed(Mouse::Button::Right))
 				{
+					cout << "Right Button Clicked..." << endl;	
 					c.zoomOut();
-					c.setCenter(sf::Mouse::getPosition(window));
+					c.setCenter(Mouse::getPosition(window));
 				}
 
 				if (Mouse::isButtonPressed(Mouse::Button::Left))
-                                {
-                                        c.zoomIn();
-					c.setCenter(sf::Mouse::getPosition(window));
-                                } 
-                        }
+                {
+					cout << "Left Button Clicked..." << endl;	
+                    c.zoomIn();
+					c.setCenter(Mouse::getPosition(window));
+                } 
+             }
 
 			if (event.type == Event::MouseMoved)
 			{
-				c.setMouseLocation(sf::Mouse::getPosition(window));
+				c.setMouseLocation(Mouse::getPosition(window));
 			}
 		}
 
@@ -64,6 +67,16 @@ int main()
                         window.close();
                 }
 
+		if (Keyboard::isKeyPressed(Keyboard::Right))
+                {
+                       	c.zoomOut();
+                }
+
+		if (Keyboard::isKeyPressed(Keyboard::Left))
+                {
+                        c.zoomIn();
+                }
+	
 		///Update
 
 		c.updateRender();
